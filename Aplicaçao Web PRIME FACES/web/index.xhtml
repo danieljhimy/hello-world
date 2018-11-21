@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <h:head>
+        <title>Cadastro Funcionário</title>
+        <meta charSet="UTF-8" />
+    </h:head>
+    <h:body>
+        <h1>Cadastro Funcionário</h1>
+        <h:form id="FormFunc">
+            <p:growl id="msgs" showDetail="true"/>
+
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Matricula: " />
+                <p:inputText value="#{funcionarioMB.funcionario.matricula}"/>
+                <p:outputLabel value="Nome: " />
+                <p:inputText value="#{funcionarioMB.funcionario.nome}"/>
+                <p:outputLabel value="Cargo: " />
+                <p:inputText value="#{funcionarioMB.funcionario.cargo}"/>
+                <p:outputLabel value="Salário: " />
+                <p:inputText value="#{funcionarioMB.funcionario.salario}"/>
+            </p:panelGrid>
+            <p:commandButton value="Salvar"
+                             action="#{funcionarioMB.salvar()}"
+                             update=":FormFunc"
+                             />
+            <p:dataTable var="f" 
+                         value="#{funcionarioMB.funcionarios}"
+                         rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         editable="true"
+                         selection="#{funcionarioMB.funcionarioSelecionado}" 
+                         selectionMode="single"
+                         rowKey="#{f.matricula}"
+                         id="tableFunc"
+                         >
+
+
+                <p:ajax event="rowEdit" 
+                        listener="#{funcionarioMB.onRowEdit}"
+                        update=":FormFunc:msgs" />
+
+
+
+
+
+                <p:column headerText="Matrícula">
+                    <p:outputLabel value="#{f.matricula}"/>
+                </p:column>
+                <p:column filterBy="#{f.nome}" 
+                          headerText="Nome"
+                          filterMatchMode="contains"
+                          >
+                    <p:outputLabel value="#{f.nome}"/>
+                </p:column>
+                <p:column headerText="Cargo">
+
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{f.cargo}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="modelInput" 
+                                         value="#{f.cargo}"
+                                         style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+
+                </p:column>
+                <p:column headerText="Salário">
+                    <p:outputLabel value="#{f.salario}"/>
+                </p:column>
+
+                <p:column style="width:32px">
+                    <p:rowEditor />
+                </p:column>
+
+            </p:dataTable>
+            
+            <p:contextMenu for="tableFunc">
+                
+                <p:menuitem value="Delete" update="tableFunc" icon="ui-icon-close" actionListener="#{funcionarioMB.deleteFunc()}"/>
+            </p:contextMenu>
+
+
+
+        </h:form>
+    </h:body>
+</html>
+
